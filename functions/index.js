@@ -243,15 +243,16 @@ exports.deletePatient = functions.https.onRequest((req,res)=>{
         .then(doc=>{
             if(!doc.exists)
             {
-                res.json({
+                res.status(404).json({
                     message:"No document found to delete"
                 })
             }
-            else
-            {
-                dbref.collection('patient-data').doc(req.body.tobeRetrived).delete()
+            return null;
+        })
+        .then(() => {
+            dbref.collection('patient-data').doc(req.body.tobeRetrived).delete()
                 .then(()=>{
-                    res.json({
+                    res.status(200).json({
                         message:"The document was deleted"
                     })
                     return null;
@@ -261,9 +262,7 @@ exports.deletePatient = functions.https.onRequest((req,res)=>{
                         err
                     })
                 })
-                
-            }
-            return null;
+                return null;
         })
         .catch(err =>{
             res.json({
